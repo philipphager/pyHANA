@@ -22,12 +22,12 @@ from pyhdb.lib.tracing import trace
 
 TRACE_MSG = '''RequestMessage = {
     header = [
-        session_id = 5,
-        packet_count = 3,
-        payload_length = 500,
-        varpartsize = 500,
         num_segments = 1,
-        packet_options = 0
+        packet_count = 3,
+        packet_options = 0,
+        payload_length = 500,
+        session_id = 5,
+        varpartsize = 500
     ],
     segments = [
         RequestSegment = {
@@ -35,9 +35,9 @@ TRACE_MSG = '''RequestMessage = {
             parts = [
                 Command = {
                     header = None,
+                    sql_statement = 'select * from dummy',
                     trace_header = '',
-                    trace_payload = '',
-                    sql_statement = 'select * from dummy'
+                    trace_payload = ''
                 }
             ]
         }
