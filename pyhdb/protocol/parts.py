@@ -21,6 +21,7 @@ import struct
 import logging
 from collections import namedtuple
 from weakref import WeakValueDictionary
+from os import SEEK_SET, SEEK_CUR, SEEK_END
 ###
 import pyhdb
 from pyhdb.lib.stringlib import humanhexlify
@@ -569,7 +570,7 @@ class Parameters(Part):
             payload.write(lob_buffer.DataType.prepare(None, length=max_data_to_write,
                                                       position=rel_lob_pos, is_last_data=is_last_data))
             # Set pointer back to end for further writing
-            payload.seek(0, io.SEEK_END)
+            payload.seek(0, SEEK_END)
         return unwritten_lobs
 
 
