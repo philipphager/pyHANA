@@ -24,7 +24,7 @@ import mock
 
 from pyhdb.protocol import lobs
 from pyhdb.protocol.types import type_codes
-from pyhdb.compat import PY2, PY3, iter_range, text_type
+from pyhdb.compat import PY2, PY3, iter_range, text_type, StringIO
 from pyhdb.protocol import constants
 
 # #############################################################################################################
@@ -133,7 +133,7 @@ def test_clob___unicode___method():
 def test_nclob_uses_string_io():
     data = string.ascii_letters
     nclob = lobs.NClob(data)
-    assert isinstance(nclob.data, io.StringIO)
+    assert isinstance(nclob.data, StringIO)
 
 
 def test_nclob_from_ascii_string():
@@ -160,7 +160,7 @@ def test_nclob_from_unicode():
 
 def test_nclob_from_string_io():
     data = u'朱の子ましけ'
-    text_io = io.StringIO(data)
+    text_io = StringIO(data)
     nclob = lobs.NClob(text_io)
     assert nclob.getvalue() == data
     assert nclob.data is text_io
@@ -296,6 +296,7 @@ def test_lob_init_and_more(type_code, lob_header, bin_lob_data, lob_data, lob_da
     assert len(lob) == len(lob_data)
     assert lob.read() == lob_data
     assert lob.tell() == len(lob_data)
+
     assert lob.read(5) == lob_data_empty
     # go back to begging of lob, and just read three chars:
     assert lob.seek(0) == 0
