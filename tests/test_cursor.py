@@ -163,7 +163,7 @@ def test_cursor_execute_with_params5(connection, test_table_1, content_table_1):
     # Note: use fetchall() to check that only one row gets returned
     cursor = connection.cursor()
 
-    sql = 'select test from {} where test=%(test)s'.format(TABLE)
+    sql = 'select test from {0} where test=%(test)s'.format(TABLE)
     # correct way:
     assert cursor.execute(sql, {'test': 'row2'}).fetchall() == [('row2',)]
     # also correct way, additional dict value should just be ignored
@@ -251,7 +251,7 @@ def test_cursor_executemany_python_expansion(connection, test_table_1):
     cursor = connection.cursor()
 
     cursor.executemany(
-        "INSERT INTO {} VALUES(%s)".format(TABLE),
+        "INSERT INTO {0} VALUES(%s)".format(TABLE),
         (
             ("Statement 1",),
             ("Statement 2",)

@@ -27,6 +27,8 @@ if PY2:
     iter_range = xrange
     import ConfigParser as configparser
     from itertools import izip
+    import StringIO as _StringIO
+    StringIO = _StringIO.StringIO
 else:
     text_type = str
     byte_type = bytes
@@ -36,6 +38,8 @@ else:
     iter_range = range
     import configparser
     izip = zip
+    import io
+    StringIO = io.StringIO
 
 # workaround for 'narrow' Python builds
 if sys.maxunicode <= 65535:
