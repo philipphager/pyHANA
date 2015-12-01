@@ -1,3 +1,12 @@
+This repository
+===============
+
+This repository is a fork of the official repository at `https://github.com/SAP/PyHDB`. The goal of this repo is to have it maintained by the open-source community. 
+
+Think of this repository as a cutting-edge version, if you will.
+
+Original Readme:
+=================
 SAP HANA Database Client for Python
 ===================================
 
@@ -30,13 +39,13 @@ Install from GitHub via pip:
 
 .. code-block:: bash
 
-    $ pip install git+https://github.com/SAP/pyhdb.git
+    $ pip install git+https://github.com/TwoLaid/pyhdb.git
 
 You can also install the latest version direct from a cloned git repository.
 
 .. code-block:: bash
 
-    $ git clone https://github.com/SAP/pyhdb.git
+    $ git clone https://github.com/TwoLaid/pyhdb.git
     $ cd pyhdb
     $ python setup.py install
 
