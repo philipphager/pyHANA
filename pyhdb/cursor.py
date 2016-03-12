@@ -75,6 +75,22 @@ class PreparedStatement(object):
         self._iter_row_count = 0
         return self
 
+    def _drop(self):
+        """Drop this prepared statement from the connection.
+        This is necessary in order to not hit the maximum cap.
+        """
+        if self._connection is None or self._connection.closed:
+            raise ProgrammingError("Cursor closed")
+
+        request = RequestMessage.new(
+            self._connection,
+            RequestSegment(
+                message_types.DROP_STATEMENT_ID,
+                StatementId(self.statement_id)
+            )
+        )
+        self._connection.send_request(request)
+
     def __repr__(self):
         return '<PreparedStatement id=%r>' % self.statement_id
 
@@ -201,6 +217,27 @@ class Cursor(object):
                 self._handle_dbproc_call(parts, prepared_statement._params_metadata) # resultset metadata set in prepare
             else:
                 raise InterfaceError("Invalid or unsupported function code received: %d" % function_code)
+
+    def drop_prepared(self, prepared_statement_or_id):
+        """Drop prepared statement from the cursor and connection.
+        :param prepared_statement_or_id: A PreparedStatement instance or a prepared statement ID
+        """
+        self._check_closed()
+
+        # retrieve PreparedStatement instance if necessary
+        prepared_statement = None
+        if isinstance(prepared_statement_or_id, PreparedStatement):
+            prepared_statement = prepared_statement_or_id
+        elif prepared_statement_or_id in self._prepared_statements:
+            prepared_statement = self._prepared_statements[prepared_statement_or_id]
+
+        if prepared_statement is None:
+            return
+
+        prepared_statement._drop()
+
+        if prepared_statement.statement_id in self._prepared_statements:
+            del self._prepared_statements[prepared_statement.statement_id]
 
     def _execute_direct(self, operation):
         """Execute statements which are not going through 'prepare_statement' (aka 'direct execution').
