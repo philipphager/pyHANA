@@ -84,7 +84,7 @@ class AuthManager(object):
         key_hash = hashlib.sha256(key).digest()
 
         sig = hmac.new(
-            key_hash, msg, hashlib.sha256
+            key_hash, str(msg), hashlib.sha256
         ).digest()
 
         return self._xor(sig, key)

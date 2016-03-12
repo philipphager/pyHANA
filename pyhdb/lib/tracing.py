@@ -14,6 +14,7 @@
 from __future__ import print_function
 import io
 import pyhdb
+from pyhdb.compat import StringIO
 
 
 def trace(trace_obj):
@@ -34,7 +35,7 @@ class TraceLogger(object):
     def __init__(self):
         self._indent_level = 0
         self._indent_level_is_first = {0: True}
-        self._buffer = io.StringIO()
+        self._buffer = StringIO()
 
     def trace(self, trace_obj):
         """
@@ -45,13 +46,13 @@ class TraceLogger(object):
         tracer = self
         tracer.writeln(u'%s = ' % trace_obj.__class__.__name__)
         tracer.incr('{')
-        for attr_name in trace_obj.__tracing_attrs__:
+        for attr_name in sorted(trace_obj.__tracing_attrs__):
             attr = getattr(trace_obj, attr_name)
             if isinstance(attr, tuple) and hasattr(attr, '_fields'):
                 # probably a namedtuple instance
                 tracer.writeln(u'%s = ' % (attr_name,))
                 tracer.incr('[')
-                for k, v in attr._asdict().items():
+                for k, v in sorted(attr._asdict().items()):
                     # _asdict() creates an OrderedDict, so elements are still in order
                     tracer.writeln(u'%s = %s' % (k, v))
                 tracer.decr(']')

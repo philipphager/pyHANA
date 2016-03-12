@@ -14,18 +14,20 @@
 
 import io
 import logging
+from os import SEEK_SET, SEEK_CUR, SEEK_END
+
 from pyhdb.protocol.headers import ReadLobHeader
 from pyhdb.protocol.message import RequestMessage
 from pyhdb.protocol.segments import RequestSegment
 from pyhdb.protocol.constants import message_types, type_codes
 from pyhdb.protocol.parts import ReadLobRequest
-from pyhdb.compat import PY2, PY3, byte_type
+from pyhdb.compat import PY2, PY26, PY3, byte_type, StringIO
 
 if PY2:
     # Depending on the Python version we use different underlying containers for CLOB strings
-    import StringIO
+    import StringIO as _StringIO
     import cStringIO
-    CLOB_STRING_IO_CLASSES = (StringIO.StringIO, cStringIO.InputType, cStringIO.OutputType)
+    CLOB_STRING_IO_CLASSES = (_StringIO.StringIO, cStringIO.InputType, cStringIO.OutputType)
 
     def CLOB_STRING_IO(init_value):
         # factory function to obtain a read-writable StringIO object
@@ -40,10 +42,6 @@ else:
 
 
 logger = logging.getLogger('pyhdb')
-
-SEEK_SET = io.SEEK_SET
-SEEK_CUR = io.SEEK_CUR
-SEEK_END = io.SEEK_END
 
 
 def from_payload(type_code, payload, connection):
@@ -264,7 +262,7 @@ class NClob(_CharLob):
         return self.data.getvalue()
 
     def _init_io_container(self, init_value):
-        if isinstance(init_value, io.StringIO):
+        if isinstance(init_value, type(StringIO())):
             return init_value
 
         if PY2 and isinstance(init_value, str):
@@ -273,7 +271,7 @@ class NClob(_CharLob):
         if PY3 and isinstance(init_value, byte_type):
             init_value = init_value.decode(self.encoding)
 
-        return io.StringIO(init_value)
+        return StringIO(init_value)
 
 
 LOB_TYPE_CODE_MAP = {
