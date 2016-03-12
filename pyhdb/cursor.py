@@ -63,6 +63,7 @@ class PreparedStatement(object):
         self._multi_row_parameters = None
         self._num_rows = None
         self._iter_row_count = None
+        self.execution_count = 0
 
     def prepare_parameters(self, multi_row_parameters):
         """ Attribute sql parameters with meta data for a prepared statement.
@@ -73,6 +74,7 @@ class PreparedStatement(object):
         self._multi_row_parameters = multi_row_parameters
         self._num_rows = len(multi_row_parameters)
         self._iter_row_count = 0
+        self.execution_count += 1
         return self
 
     def _drop(self):
@@ -140,6 +142,7 @@ class Cursor(object):
         self.description = None
         self.rownumber = None
         self.arraysize = 1
+        self.max_prepared_statement_count = 5000
         self._prepared_statements = {}
 
     @property
@@ -179,6 +182,7 @@ class Cursor(object):
         assert statement_id is not None
         assert params_metadata is not None
         # cache statement:
+        self._check_statement_cache()
         self._prepared_statements[statement_id] = PreparedStatement(self.connection, statement_id,
                                                                     params_metadata, result_metadata_part)
         return statement_id
@@ -238,6 +242,16 @@ class Cursor(object):
 
         if prepared_statement.statement_id in self._prepared_statements:
             del self._prepared_statements[prepared_statement.statement_id]
+
+    def _check_statement_cache(self):
+        """Make sure that we drop prepared statements when the cache gets too full"""
+        self._check_closed()
+
+        if len(self._prepared_statements) >= self.max_prepared_statement_count:
+            # drop half of the least frequently used statements
+            least_used = sorted(self._prepared_statements, key=lambda s: self._prepared_statements[s].execution_count)[:len(self._prepared_statements) / 2]
+            for statement in least_used:
+                self.drop_prepared(statement)
 
     def _execute_direct(self, operation):
         """Execute statements which are not going through 'prepare_statement' (aka 'direct execution').
