@@ -49,7 +49,7 @@ class IncrementalDecoder(codecs.BufferedIncrementalDecoder):
                     return codecs.utf_8_decode(input, errors, final)
                 else:
                     # Stream is not done yet
-                    return u'', 0
+                    return '', 0
             elif input[3] == 237 or (PY2 and input[3] == b"\xed"):
                 if PY2:
                     bytenums = [ord(b) for b in input[:6]]
