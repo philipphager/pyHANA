@@ -39,13 +39,13 @@ Install from GitHub via pip:
 
 .. code-block:: bash
 
-    $ pip install git+https://github.com/TwoLaid/pyhdb.git
+    $ pip install git+https://github.com/hpi-epic/pyhdb.git
 
 You can also install the latest version direct from a cloned git repository.
 
 .. code-block:: bash
 
-    $ git clone https://github.com/TwoLaid/pyhdb.git
+    $ git clone https://github.com/hpi-epic/pyhdb.git
     $ cd pyhdb
     $ python setup.py install
 
