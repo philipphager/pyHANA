@@ -38,7 +38,7 @@ class IncrementalDecoder(codecs.BufferedIncrementalDecoder):
         if final and position != len(input):
             raise Exception("Final decoder doesn't decoded all bytes")
 
-        return u''.join(decoded_segments), position
+        return ''.join(decoded_segments), position
 
     def _buffer_decode_step(self, input, errors, final):
         # If begin of CESU-8 sequence
