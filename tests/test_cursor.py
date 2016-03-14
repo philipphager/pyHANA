@@ -16,7 +16,7 @@ import pytest
 from decimal import Decimal
 
 from pyhdb.cursor import format_operation
-from pyhdb.exceptions import ProgrammingError, IntegrityError
+from pyhdb.exceptions import ProgrammingError, IntegrityError, DatabaseError
 import tests.helper
 
 TABLE = 'PYHDB_TEST_1'
@@ -296,3 +296,41 @@ def test_prepared_decimal(connection, test_table_2):
     cursor.execute("SELECT * FROM PYHDB_TEST_2")
     result = cursor.fetchall()
     assert result == [(Decimal("3.14159265359"),)]
+
+@pytest.mark.hanatest
+def test_drop_statement(connection):
+    cursor = connection.cursor()
+
+    stmt_id = cursor.prepare("""SELECT 1 AS "TEST" FROM DUMMY WHERE 1 = ?""")
+    stmt = cursor.get_prepared_statement(stmt_id)
+
+    cursor.execute_prepared(stmt, [[1]])
+    result = cursor.fetchall()
+    assert result == [(1,)]
+
+    # drop the prepared statement from server (and cursor)
+    cursor.drop_prepared(stmt)
+
+    assert stmt_id not in cursor.prepared_statement_ids
+
+    with pytest.raises(DatabaseError):
+        cursor.execute_prepared(stmt, [[1]])
+
+@pytest.mark.hanatest
+def test_drop_statement_by_id(connection):
+    cursor = connection.cursor()
+
+    stmt_id = cursor.prepare("""SELECT 1 AS "TEST" FROM DUMMY WHERE 1 = ?""")
+    stmt = cursor.get_prepared_statement(stmt_id)
+
+    cursor.execute_prepared(stmt, [[1]])
+    result = cursor.fetchall()
+    assert result == [(1,)]
+
+    # drop the prepared statement from server (and cursor)
+    cursor.drop_prepared(stmt_id)
+
+    assert stmt_id not in cursor.prepared_statement_ids
+
+    with pytest.raises(DatabaseError):
+        cursor.execute_prepared(stmt, [[1]])

@@ -63,6 +63,7 @@ class PreparedStatement(object):
         self._multi_row_parameters = None
         self._num_rows = None
         self._iter_row_count = None
+        self.execution_count = 0
 
     def prepare_parameters(self, multi_row_parameters):
         """ Attribute sql parameters with meta data for a prepared statement.
@@ -73,7 +74,24 @@ class PreparedStatement(object):
         self._multi_row_parameters = multi_row_parameters
         self._num_rows = len(multi_row_parameters)
         self._iter_row_count = 0
+        self.execution_count += 1
         return self
+
+    def _drop(self):
+        """Drop this prepared statement from the connection.
+        This is necessary in order to not hit the maximum cap.
+        """
+        if self._connection is None or self._connection.closed:
+            raise ProgrammingError("Cursor closed")
+
+        request = RequestMessage.new(
+            self._connection,
+            RequestSegment(
+                message_types.DROP_STATEMENT_ID,
+                StatementId(self.statement_id)
+            )
+        )
+        self._connection.send_request(request)
 
     def __repr__(self):
         return '<PreparedStatement id=%r>' % self.statement_id
@@ -124,6 +142,7 @@ class Cursor(object):
         self.description = None
         self.rownumber = None
         self.arraysize = 1
+        self.max_prepared_statement_count = 5000
         self._prepared_statements = {}
 
     @property
@@ -163,6 +182,7 @@ class Cursor(object):
         assert statement_id is not None
         assert params_metadata is not None
         # cache statement:
+        self._check_statement_cache()
         self._prepared_statements[statement_id] = PreparedStatement(self.connection, statement_id,
                                                                     params_metadata, result_metadata_part)
         return statement_id
@@ -201,6 +221,37 @@ class Cursor(object):
                 self._handle_dbproc_call(parts, prepared_statement._params_metadata) # resultset metadata set in prepare
             else:
                 raise InterfaceError("Invalid or unsupported function code received: %d" % function_code)
+
+    def drop_prepared(self, prepared_statement_or_id):
+        """Drop prepared statement from the cursor and connection.
+        :param prepared_statement_or_id: A PreparedStatement instance or a prepared statement ID
+        """
+        self._check_closed()
+
+        # retrieve PreparedStatement instance if necessary
+        prepared_statement = None
+        if isinstance(prepared_statement_or_id, PreparedStatement):
+            prepared_statement = prepared_statement_or_id
+        elif prepared_statement_or_id in self._prepared_statements:
+            prepared_statement = self._prepared_statements[prepared_statement_or_id]
+
+        if prepared_statement is None:
+            return
+
+        prepared_statement._drop()
+
+        if prepared_statement.statement_id in self._prepared_statements:
+            del self._prepared_statements[prepared_statement.statement_id]
+
+    def _check_statement_cache(self):
+        """Make sure that we drop prepared statements when the cache gets too full"""
+        self._check_closed()
+
+        if len(self._prepared_statements) >= self.max_prepared_statement_count:
+            # drop half of the least frequently used statements
+            least_used = sorted(self._prepared_statements, key=lambda s: self._prepared_statements[s].execution_count)[:len(self._prepared_statements) / 2]
+            for statement in least_used:
+                self.drop_prepared(statement)
 
     def _execute_direct(self, operation):
         """Execute statements which are not going through 'prepare_statement' (aka 'direct execution').
