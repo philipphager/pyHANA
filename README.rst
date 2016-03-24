@@ -5,6 +5,9 @@ This repository is a fork of the official repository at `https://github.com/SAP/
 
 Think of this repository as a cutting-edge version, if you will.
 
+.. image:: https://travis-ci.org/hpi-epic/PyHDB.svg?branch=master
+    :target: https://travis-ci.org/hpi-epic/PyHDB
+
 Original Readme:
 =================
 SAP HANA Database Client for Python
