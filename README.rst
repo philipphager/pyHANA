@@ -5,8 +5,13 @@ This repository is a fork of the official repository at `https://github.com/SAP/
 
 Think of this repository as a cutting-edge version, if you will.
 
-.. image:: https://travis-ci.org/hpi-epic/PyHDB.svg?branch=master
+|travis| |coverage|
+
+.. |travis| image:: https://travis-ci.org/hpi-epic/PyHDB.svg?branch=master
     :target: https://travis-ci.org/hpi-epic/PyHDB
+
+.. |coverage| image:: https://codecov.io/github/hpi-epic/PyHDB/coverage.svg?branch=master
+    :target: https://codecov.io/github/hpi-epic/PyHDB?branch=master
 
 Original Readme:
 =================
