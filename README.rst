@@ -7,11 +7,11 @@ Think of this repository as a cutting-edge version, if you will.
 
 |travis| |coverage|
 
-.. |travis| image:: https://travis-ci.org/hpi-epic/PyHDB.svg?branch=master
-    :target: https://travis-ci.org/hpi-epic/PyHDB
+.. |travis| image:: https://travis-ci.org/hpi-epic/PyHANA.svg?branch=master
+    :target: https://travis-ci.org/hpi-epic/PyHANA
 
-.. |coverage| image:: https://codecov.io/github/hpi-epic/PyHDB/coverage.svg?branch=master
-    :target: https://codecov.io/github/hpi-epic/PyHDB?branch=master
+.. |coverage| image:: https://codecov.io/github/hpi-epic/PyHANA/coverage.svg?branch=master
+    :target: https://codecov.io/github/hpi-epic/PyHANA?branch=master
 
 Original Readme:
 =================
@@ -37,23 +37,17 @@ Table of contents
 Install
 -------
 
-Install from Python Package Index:
-
-.. code-block:: bash
-
-    $ pip install pyhdb
-
 Install from GitHub via pip:
 
 .. code-block:: bash
 
-    $ pip install git+https://github.com/hpi-epic/pyhdb.git
+    $ pip install git+https://github.com/hpi-epic/pyhana.git
 
 You can also install the latest version direct from a cloned git repository.
 
 .. code-block:: bash
 
-    $ git clone https://github.com/hpi-epic/pyhdb.git
+    $ git clone https://github.com/hpi-epic/pyhana.git
     $ cd pyhdb
     $ python setup.py install
 
