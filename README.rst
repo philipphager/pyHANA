@@ -7,11 +7,11 @@ Think of this repository as a cutting-edge version, if you will.
 
 |travis| |coverage|
 
-.. |travis| image:: https://travis-ci.org/hpi-epic/PyHANA.svg?branch=master
-    :target: https://travis-ci.org/hpi-epic/PyHANA
+.. |travis| image:: https://travis-ci.org/hpi-epic/pyHANA.svg?branch=master
+    :target: https://travis-ci.org/hpi-epic/pyHANA
 
-.. |coverage| image:: https://codecov.io/github/hpi-epic/PyHANA/coverage.svg?branch=master
-    :target: https://codecov.io/github/hpi-epic/PyHANA?branch=master
+.. |coverage| image:: https://codecov.io/github/hpi-epic/pyHANA/coverage.svg?branch=master
+    :target: https://codecov.io/github/hpi-epic/pyHANA?branch=master
 
 Original Readme:
 =================
