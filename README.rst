@@ -131,6 +131,7 @@ With the execute method you can also execute DDL statements like ``CREATE TABLE`
 .. code-block:: pycon
 
     >>> cursor.execute('CREATE TABLE PYHDB_TEST("NAMES" VARCHAR (255) null)')
+    >>> connection.commit()  # necessary to commit the changes
 
 
 Example insert
@@ -144,6 +145,7 @@ attribute ``rowcount`` contains the number of affected rows by the last statemen
     >>> cursor.execute("INSERT INTO PYHDB_TEST VALUES('Hello Python World')")
     >>> cursor.rowcount
     1
+    >>> connection.commit()  # necessary to commit the changes
 
 
 LOBs
