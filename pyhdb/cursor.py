@@ -14,13 +14,13 @@
 
 import collections
 ###
-from protocol.message import RequestMessage
-from protocol.segments import RequestSegment
-from protocol.types import escape_values, by_type_code
-from protocol.parts import Command, FetchSize, ResultSetId, StatementId, Parameters, WriteLobRequest
-from protocol.constants import message_types, function_codes, part_kinds
-from exceptions import ProgrammingError, InterfaceError, DatabaseError
-from compat import izip
+from .protocol.message import RequestMessage
+from .protocol.segments import RequestSegment
+from .protocol.types import escape_values, by_type_code
+from .protocol.parts import Command, FetchSize, ResultSetId, StatementId, Parameters, WriteLobRequest
+from .protocol.constants import message_types, function_codes, part_kinds
+from .exceptions import ProgrammingError, InterfaceError, DatabaseError
+from .compat import izip
 
 FORMAT_OPERATION_ERRORS = [
     'not enough arguments for format string',

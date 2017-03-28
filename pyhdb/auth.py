@@ -18,11 +18,11 @@ import hashlib
 import hmac
 from io import BytesIO
 ###
-from protocol.segments import RequestSegment
-from protocol.constants import message_types
-from protocol.parts import Authentication, Fields
-from protocol.message import RequestMessage
-from compat import iter_range
+from .protocol.segments import RequestSegment
+from .protocol.constants import message_types
+from .protocol.parts import Authentication, Fields
+from .protocol.message import RequestMessage
+from .compat import iter_range
 
 CLIENT_PROOF_SIZE = 32
 CLIENT_KEY_SIZE = 64

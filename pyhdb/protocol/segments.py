@@ -18,12 +18,10 @@ import logging
 from io import BytesIO
 from os import SEEK_SET, SEEK_CUR, SEEK_END
 ###
-from constants import part_kinds
+from .constants import part_kinds, segment_kinds, MAX_SEGMENT_SIZE
 from ..compat import iter_range
-import constants
-from parts import Part
-from headers import RequestSegmentHeader, ReplySegmentHeader
-from constants import segment_kinds
+from .parts import Part
+from .headers import RequestSegmentHeader, ReplySegmentHeader
 
 
 logger = logging.getLogger('pyhdb')
@@ -55,7 +53,7 @@ class RequestSegment(BaseSegment):
     segment_kind = segment_kinds.REQUEST
     header_struct = struct.Struct(BaseSegment.base_header_struct_fmt + 'bbbb8x')  # + I1 I1 I1 I1 x[8]
     header_size = header_struct.size
-    MAX_SEGMENT_PAYLOAD_SIZE = constants.MAX_SEGMENT_SIZE - header_size
+    MAX_SEGMENT_PAYLOAD_SIZE = MAX_SEGMENT_SIZE - header_size
 
     def __init__(self, message_type, parts=None, header=None):
         super(RequestSegment, self).__init__(parts, header)

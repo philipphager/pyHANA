@@ -16,7 +16,8 @@ import io
 import struct
 from os import SEEK_SET, SEEK_CUR, SEEK_END
 ###
-import constants
+from .constants.general import MESSAGE_HEADER_SIZE
+from .constants import MAX_SEGMENT_SIZE
 from .headers import MessageHeader
 from .segments import ReplySegment
 from ..lib.tracing import trace
@@ -28,7 +29,7 @@ class BaseMessage(object):
     """
     header_struct = struct.Struct('qiIIhb9x')  # I8 I4 UI4 UI4 I2 I1 x[9]
     header_size = header_struct.size
-    assert header_size == constants.general.MESSAGE_HEADER_SIZE  # Ensures that the constant defined there is correct!
+    assert header_size == MESSAGE_HEADER_SIZE  # Ensures that the constant defined there is correct!
     __tracing_attrs__ = ['header', 'segments']
 
     def __init__(self, session_id, packet_count, segments=(), autocommit=False, header=None):
@@ -56,7 +57,7 @@ class RequestMessage(BaseMessage):
         self.build_payload(payload)
 
         packet_length = len(payload.getvalue()) - self.header_size
-        self.header = MessageHeader(self.session_id, self.packet_count, packet_length, constants.MAX_SEGMENT_SIZE,
+        self.header = MessageHeader(self.session_id, self.packet_count, packet_length, MAX_SEGMENT_SIZE,
                                     num_segments=len(self.segments), packet_options=0)
         packed_header = self.header_struct.pack(*self.header)
 

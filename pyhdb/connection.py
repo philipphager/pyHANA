@@ -19,13 +19,13 @@ import struct
 import threading
 import logging
 ###
-from auth import AuthManager
-from cursor import Cursor
-from exceptions import Error, OperationalError, ConnectionTimedOutError
-from protocol.segments import RequestSegment
-from protocol.message import RequestMessage, ReplyMessage
-from protocol.parts import ClientId, ConnectOptions
-from protocol.constants import message_types, function_codes, DEFAULT_CONNECTION_OPTIONS
+from .auth import AuthManager
+from .cursor import Cursor
+from .exceptions import Error, OperationalError, ConnectionTimedOutError
+from .protocol.segments import RequestSegment
+from .protocol.message import RequestMessage, ReplyMessage
+from .protocol.parts import ClientId, ConnectOptions
+from .protocol.constants import message_types, function_codes, DEFAULT_CONNECTION_OPTIONS
 
 INITIALIZATION_BYTES = bytearray([
     255, 255, 255, 255, 4, 20, 0, 4, 1, 0, 0, 1, 1, 1
