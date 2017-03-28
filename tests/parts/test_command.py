@@ -18,7 +18,7 @@ from pyhdb.protocol import constants
 
 
 def test_pack_data():
-    query = "SELECT * FROM DYMMY"
+    query = "SELECT * FROM DUMMY"
     part = Command(query)
     assert part.sql_statement == query
 
@@ -28,6 +28,5 @@ def test_pack_data():
 
 
 def test_unpack_data():
-    query = b"SELECT * FROM DYMMY"
-    stmt = Command.unpack_data(1, BytesIO(query))
-    assert stmt == query
+    stmt = Command.unpack_data(1, BytesIO(b"SELECT * FROM DUMMY"))
+    assert stmt == "SELECT * FROM DUMMY"
