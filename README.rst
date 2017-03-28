@@ -1,17 +1,19 @@
-This repository
-===============
-
-This repository is a fork of the official repository at `https://github.com/SAP/PyHDB`. The goal of this repo is to have it maintained by the open-source community. 
-
-Think of this repository as a cutting-edge version, if you will.
-
-|travis| |coverage|
+|travis|
 
 .. |travis| image:: https://travis-ci.org/hpi-epic/pyHANA.svg?branch=master
     :target: https://travis-ci.org/hpi-epic/pyHANA
 
 .. |coverage| image:: https://codecov.io/github/hpi-epic/pyHANA/coverage.svg?branch=master
     :target: https://codecov.io/github/hpi-epic/pyHANA?branch=master
+
+
+
+The pyHANA Fork
+===============
+
+This repository is a fork of the official repository at `https://github.com/SAP/PyHDB`. The goal of this repo is to have it maintained by the open-source community. 
+
+Think of this repository as a cutting-edge version, if you will.
 
 Original Readme:
 =================
