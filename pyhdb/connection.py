@@ -147,7 +147,7 @@ class Connection(object):
                     (
                         agreed_auth_part,
                         ClientId(
-                            "pyhdb-%s@%s" % (os.getpid(), socket.getfqdn())
+                            "pyhdb-%s@%s" % (os.getpid(), socket.gethostname())
                         ),
                         ConnectOptions(DEFAULT_CONNECTION_OPTIONS)
                     )
