@@ -16,7 +16,7 @@ import pytest
 from decimal import Decimal
 
 from pyhdb.cursor import format_operation
-from pyhdb.exceptions import ProgrammingError, IntegrityError
+from pyhdb.exceptions import ProgrammingError, IntegrityError, DatabaseError
 import tests.helper
 
 TABLE = 'PYHDB_TEST_1'
@@ -296,3 +296,10 @@ def test_prepared_decimal(connection, test_table_2):
     cursor.execute("SELECT * FROM PYHDB_TEST_2")
     result = cursor.fetchall()
     assert result == [(Decimal("3.14159265359"),)]
+
+@pytest.mark.hanatest
+def test_cursor_insert_too_large(connection, test_table_1):
+    cursor = connection.cursor()
+
+    with pytest.raises(DatabaseError):
+        cursor.execute("INSERT INTO PYHDB_TEST_1(TEST) VALUES(?)", ['a' * 300])
