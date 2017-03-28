@@ -16,12 +16,12 @@ import io
 import logging
 from os import SEEK_SET, SEEK_CUR, SEEK_END
 
-from pyhdb.protocol.headers import ReadLobHeader
-from pyhdb.protocol.message import RequestMessage
-from pyhdb.protocol.segments import RequestSegment
-from pyhdb.protocol.constants import message_types, type_codes
-from pyhdb.protocol.parts import ReadLobRequest
-from pyhdb.compat import PY2, PY26, PY3, byte_type, StringIO
+from .headers import ReadLobHeader
+from .message import RequestMessage
+from .segments import RequestSegment
+from .constants import message_types, type_codes
+from .parts import ReadLobRequest
+from ..compat import PY2, PY26, PY3, byte_type, StringIO
 
 if PY2:
     # Depending on the Python version we use different underlying containers for CLOB strings

@@ -24,14 +24,14 @@ from weakref import WeakValueDictionary
 from os import SEEK_SET, SEEK_CUR, SEEK_END
 ###
 import pyhdb
-from pyhdb.lib.stringlib import humanhexlify
-from pyhdb.protocol import types
-from pyhdb.protocol import constants
-from pyhdb.protocol.types import by_type_code
-from pyhdb.exceptions import InterfaceError, DatabaseError, DataError, IntegrityError
-from pyhdb.compat import is_text, iter_range, with_metaclass, string_types, byte_type
-from pyhdb.protocol.headers import ReadLobHeader, PartHeader, WriteLobHeader
-from pyhdb.protocol.constants import parameter_direction
+from ..lib.stringlib import humanhexlify
+from ..protocol import types
+from ..protocol import constants
+from ..protocol.types import by_type_code
+from ..exceptions import InterfaceError, DatabaseError, DataError, IntegrityError
+from ..compat import is_text, iter_range, with_metaclass, string_types, byte_type
+from ..protocol.headers import ReadLobHeader, PartHeader, WriteLobHeader
+from ..protocol.constants import parameter_direction
 
 logger = logging.getLogger('pyhdb')
 debug = logger.debug

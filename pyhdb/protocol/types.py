@@ -22,11 +22,11 @@ import logging
 import datetime
 from weakref import WeakValueDictionary
 
-from pyhdb.protocol.constants import type_codes
-from pyhdb.exceptions import InterfaceError
-from pyhdb.compat import PY26, PY2, PY3, with_metaclass, iter_range, int_types, \
+from .constants import type_codes
+from ..exceptions import InterfaceError
+from ..compat import PY26, PY2, PY3, with_metaclass, iter_range, int_types, \
     string_types, byte_type, text_type
-from pyhdb.protocol.headers import WriteLobHeader
+from .headers import WriteLobHeader
 
 
 logger = logging.getLogger('pyhdb')

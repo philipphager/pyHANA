@@ -16,10 +16,10 @@ import io
 import struct
 from os import SEEK_SET, SEEK_CUR, SEEK_END
 ###
-from pyhdb.protocol import constants
-from pyhdb.protocol.headers import MessageHeader
-from pyhdb.protocol.segments import ReplySegment
-from pyhdb.lib.tracing import trace
+import constants
+from .headers import MessageHeader
+from .segments import ReplySegment
+from ..lib.tracing import trace
 
 
 class BaseMessage(object):

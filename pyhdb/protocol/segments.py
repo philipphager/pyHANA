@@ -18,12 +18,12 @@ import logging
 from io import BytesIO
 from os import SEEK_SET, SEEK_CUR, SEEK_END
 ###
-from pyhdb.protocol.constants import part_kinds
-from pyhdb.compat import iter_range
-from pyhdb.protocol import constants
-from pyhdb.protocol.parts import Part
-from pyhdb.protocol.headers import RequestSegmentHeader, ReplySegmentHeader
-from pyhdb.protocol.constants import segment_kinds
+from constants import part_kinds
+from ..compat import iter_range
+import constants
+from parts import Part
+from headers import RequestSegmentHeader, ReplySegmentHeader
+from constants import segment_kinds
 
 
 logger = logging.getLogger('pyhdb')

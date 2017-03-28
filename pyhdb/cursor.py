@@ -14,13 +14,13 @@
 
 import collections
 ###
-from pyhdb.protocol.message import RequestMessage
-from pyhdb.protocol.segments import RequestSegment
-from pyhdb.protocol.types import escape_values, by_type_code
-from pyhdb.protocol.parts import Command, FetchSize, ResultSetId, StatementId, Parameters, WriteLobRequest
-from pyhdb.protocol.constants import message_types, function_codes, part_kinds
-from pyhdb.exceptions import ProgrammingError, InterfaceError, DatabaseError
-from pyhdb.compat import izip
+from protocol.message import RequestMessage
+from protocol.segments import RequestSegment
+from protocol.types import escape_values, by_type_code
+from protocol.parts import Command, FetchSize, ResultSetId, StatementId, Parameters, WriteLobRequest
+from protocol.constants import message_types, function_codes, part_kinds
+from exceptions import ProgrammingError, InterfaceError, DatabaseError
+from compat import izip
 
 FORMAT_OPERATION_ERRORS = [
     'not enough arguments for format string',

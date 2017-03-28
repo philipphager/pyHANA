@@ -31,4 +31,4 @@ DEFAULT_CONNECTION_OPTIONS = {
     "data_format_version2": 1
 }
 
-from pyhdb.protocol.constants.general import MAX_MESSAGE_SIZE, MAX_SEGMENT_SIZE
+from general import MAX_MESSAGE_SIZE, MAX_SEGMENT_SIZE

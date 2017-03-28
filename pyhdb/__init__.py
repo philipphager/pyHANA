@@ -14,10 +14,10 @@
 
 import os
 
-from pyhdb.exceptions import *
-from pyhdb.connection import Connection
-from pyhdb.protocol.lobs import Blob, Clob, NClob
-from pyhdb.compat import configparser
+from exceptions import *
+from connection import Connection
+from protocol.lobs import Blob, Clob, NClob
+from compat import configparser
 
 apilevel = "2.0"
 threadsafety = 2

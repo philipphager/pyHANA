@@ -13,7 +13,7 @@
 # limitations under the License.
 
 import codecs
-from pyhdb.compat import PY2, unichr
+from compat import PY2, unichr
 
 
 class IncrementalDecoder(codecs.BufferedIncrementalDecoder):

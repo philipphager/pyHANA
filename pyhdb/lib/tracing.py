@@ -14,7 +14,7 @@
 from __future__ import print_function
 import io
 import pyhdb
-from pyhdb.compat import StringIO
+from ..compat import StringIO
 
 
 def trace(trace_obj):

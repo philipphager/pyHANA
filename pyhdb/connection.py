@@ -19,13 +19,13 @@ import struct
 import threading
 import logging
 ###
-from pyhdb.auth import AuthManager
-from pyhdb.cursor import Cursor
-from pyhdb.exceptions import Error, OperationalError, ConnectionTimedOutError
-from pyhdb.protocol.segments import RequestSegment
-from pyhdb.protocol.message import RequestMessage, ReplyMessage
-from pyhdb.protocol.parts import ClientId, ConnectOptions
-from pyhdb.protocol.constants import message_types, function_codes, DEFAULT_CONNECTION_OPTIONS
+from auth import AuthManager
+from cursor import Cursor
+from exceptions import Error, OperationalError, ConnectionTimedOutError
+from protocol.segments import RequestSegment
+from protocol.message import RequestMessage, ReplyMessage
+from protocol.parts import ClientId, ConnectOptions
+from protocol.constants import message_types, function_codes, DEFAULT_CONNECTION_OPTIONS
 
 INITIALIZATION_BYTES = bytearray([
     255, 255, 255, 255, 4, 20, 0, 4, 1, 0, 0, 1, 1, 1
@@ -97,7 +97,7 @@ class Connection(object):
                 raw_header = self._socket.recv(32)
                 header = ReplyMessage.header_from_raw_header_data(raw_header)
 
-                # from pyhdb.lib.stringlib import allhexlify
+                # from lib.stringlib import allhexlify
                 # print 'Raw msg header:', allhexlify(raw_header)
                 msg = 'Message header (32 bytes): sessionid: %d, packetcount: %d, length: %d, size: %d, noofsegm: %d'
                 debug(msg, *(header[:5]))

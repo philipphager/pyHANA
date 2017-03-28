@@ -15,7 +15,7 @@
 import collections
 import struct
 ###
-from pyhdb.protocol.constants import type_codes
+from .constants import type_codes
 
 
 MessageHeader = collections.namedtuple(
