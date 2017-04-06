@@ -25,7 +25,8 @@ from pyhdb.exceptions import Error, OperationalError, ConnectionTimedOutError
 from pyhdb.protocol.segments import RequestSegment
 from pyhdb.protocol.message import RequestMessage, ReplyMessage
 from pyhdb.protocol.parts import ClientId, ConnectOptions
-from pyhdb.protocol.constants import message_types, function_codes, DEFAULT_CONNECTION_OPTIONS
+from pyhdb.protocol.constants import message_types, function_codes, \
+    DEFAULT_CONNECTION_OPTIONS, part_kinds
 
 INITIALIZATION_BYTES = bytearray([
     255, 255, 255, 255, 4, 20, 0, 4, 1, 0, 0, 1, 1, 1
@@ -51,6 +52,7 @@ class Connection(object):
 
         self.session_id = -1
         self.packet_count = -1
+        self.connect_options = DEFAULT_CONNECTION_OPTIONS
 
         self._socket = None
         self._timeout = timeout
@@ -153,7 +155,13 @@ class Connection(object):
                     )
                 )
             )
-            self.send_request(request)
+            reply = self.send_request(request)
+
+            for segment in reply.segments:
+                for part in segment.parts:
+                    if part.kind == part_kinds.CONNECTOPTIONS:
+                        self.connect_options = part.options
+
 
     def close(self):
         with self._socket_lock:
