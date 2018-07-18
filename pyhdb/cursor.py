@@ -11,6 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+from time import time
 
 import collections
 ###
@@ -113,6 +114,7 @@ class PreparedStatement(object):
 
 class Cursor(object):
     """Database cursor class"""
+
     def __init__(self, connection):
         self.connection = connection
         self._buffer = iter([])
@@ -125,6 +127,21 @@ class Cursor(object):
         self.rownumber = None
         self.arraysize = 1
         self._prepared_statements = {}
+        self.execution_time = 0
+        self.start_time = 0
+
+    def track_start(self):
+        if self.start_time == 0:
+            self.start_time = time()
+            print('Start tracking db interaction')
+        else:
+            print('Called start before end')
+
+    def track_end(self):
+        duration = time() - self.start_time
+        self.execution_time += duration
+        self.start_time = 0
+        print('End tracking db interaction', duration)
 
     @property
     def prepared_statement_ids(self):
@@ -138,6 +155,7 @@ class Cursor(object):
         :param statement; a valid SQL statement
         :returns: statement_id (of prepared and cached statement)
         """
+        self.track_start()
         self._check_closed()
         self._column_types = None
         statement_id = params_metadata = result_metadata_part = None
@@ -165,6 +183,7 @@ class Cursor(object):
         # cache statement:
         self._prepared_statements[statement_id] = PreparedStatement(self.connection, statement_id,
                                                                     params_metadata, result_metadata_part)
+        self.track_end()
         return statement_id
 
     def execute_prepared(self, prepared_statement, multi_row_parameters):
@@ -172,6 +191,7 @@ class Cursor(object):
         :param prepared_statement: A PreparedStatement instance
         :param multi_row_parameters: A list/tuple containing list/tuples of parameters (for multiple rows)
         """
+        self.track_start()
         self._check_closed()
 
         # Convert parameters into a generator producing lists with parameters as named tuples (incl. some meta data):
@@ -198,9 +218,12 @@ class Cursor(object):
                 # No additional handling is required
                 pass
             elif function_code in (function_codes.DBPROCEDURECALL, function_codes.DBPROCEDURECALLWITHRESULT):
-                self._handle_dbproc_call(parts, prepared_statement._params_metadata) # resultset metadata set in prepare
+                self._handle_dbproc_call(parts,
+                                         prepared_statement._params_metadata)  # resultset metadata set in prepare
             else:
                 raise InterfaceError("Invalid or unsupported function code received: %d" % function_code)
+
+        self.track_end()
 
     def _execute_direct(self, operation):
         """Execute statements which are not going through 'prepare_statement' (aka 'direct execution').
@@ -251,6 +274,7 @@ class Cursor(object):
         are handle by Python's own string expansion mechanism.
         Note that case 3 is not yet supported by this method!
         """
+        self.track_start()
         self._check_closed()
 
         if not parameters:
@@ -258,6 +282,7 @@ class Cursor(object):
             self._execute_direct(statement)
         else:
             self.executemany(statement, parameters=[parameters])
+        self.track_end()
         return self
 
     def executemany(self, statement, parameters):
@@ -266,6 +291,7 @@ class Cursor(object):
         :param parameters: a nested list/tuple of parameters for multiple rows
         :returns: this cursor
         """
+        self.track_start()
         # First try safer hana-style parameter expansion:
         try:
             statement_id = self.prepare(statement)
@@ -273,6 +299,7 @@ class Cursor(object):
             # Hana expansion failed, check message to be sure of reason:
             if 'incorrect syntax near "%"' not in str(msg):
                 # Probably some other error than related to string expansion -> raise an error
+                self.track_end()
                 raise
             # Statement contained percentage char, so perform Python style parameter expansion:
             for row_params in parameters:
@@ -283,6 +310,7 @@ class Cursor(object):
             prepared_statement = self.get_prepared_statement(statement_id)
             self.execute_prepared(prepared_statement, parameters)
         # Return cursor object:
+        self.track_end()
         return self
 
     def _handle_upsert(self, parts, unwritten_lobs=()):
@@ -388,6 +416,7 @@ class Cursor(object):
         :param size: Number of rows to return.
         :returns: list of row records (tuples)
         """
+        self.track_start()
         self._check_closed()
         if not self._executed:
             raise ProgrammingError("Require execute() first")
@@ -405,6 +434,7 @@ class Cursor(object):
 
         if cnt == size or self._received_last_resultset_part:
             # No rows are missing or there are no additional rows
+            self.track_end()
             return result
 
         request = RequestMessage.new(
@@ -420,13 +450,16 @@ class Cursor(object):
         if resultset_part.attribute & 1:
             self._received_last_resultset_part = True
         result.extend(resultset_part.unpack_rows(self._column_types, self.connection))
+        self.track_end()
         return result
 
     def fetchone(self):
+        self.track_start()
         """Fetch one row from select result set.
         :returns: a single row tuple
         """
         result = self.fetchmany(size=1)
+        self.track_end()
         if result:
             return result[0]
         return None
@@ -434,6 +467,7 @@ class Cursor(object):
     FETCHALL_BLOCKSIZE = 1024
 
     def fetchall(self):
+        self.track_start()
         """Fetch all available rows from select result set.
         :returns: list of row tuples
         """
@@ -441,6 +475,7 @@ class Cursor(object):
         while len(r) == self.FETCHALL_BLOCKSIZE or not self._received_last_resultset_part:
             r = self.fetchmany(size=self.FETCHALL_BLOCKSIZE)
             result.extend(r)
+        self.track_end()
         return result
 
     def close(self):
