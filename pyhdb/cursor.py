@@ -134,14 +134,13 @@ class Cursor(object):
         if self.start_time == 0:
             self.start_time = time()
             print('Start tracking db interaction')
-        else:
-            print('Called start before end')
 
     def track_end(self):
-        duration = time() - self.start_time
-        self.execution_time += duration
-        self.start_time = 0
-        print('End tracking db interaction', duration)
+        if self.start_time > 0:
+            duration = time() - self.start_time
+            self.execution_time += duration
+            self.start_time = 0
+            print('End tracking db interaction', duration)
 
     def execution_time(self):
         return self.execution_time
