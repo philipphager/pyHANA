@@ -143,6 +143,9 @@ class Cursor(object):
         self.start_time = 0
         print('End tracking db interaction', duration)
 
+    def execution_time(self):
+        return self.execution_time
+
     @property
     def prepared_statement_ids(self):
         return self._prepared_statements.keys()
